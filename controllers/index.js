@@ -72,12 +72,24 @@ const getAllBikes = async (req, res) => {
   }
 }
 
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find()
+    return res.status(200).json({ users })
+  } catch (error) {
+    return res.status(500).send(error.message)
+  }
+}
+
 const getUsersBikes = async (req, res) => {
   try {
     const { user_id } = req.params
-    const userBikeIds = await User.findbyId(user_id).user_bikes
-    const usersBikes = await Bikes.find().where('_id').in(userBikeIds).exec();
-    return res.status(200).json({ usersBikes })
+    const user = await User.findById(user_id)
+    const userBikeIds = user.users_bikes
+    const usersBikes = userBikeIds.map((id) => {
+      Bike.findById(id)
+    })
+    return res.status(200).json({ usersBikes, userBikeIds, })
   } catch (error) {
     return res.status(500).send(error.message)
   }
@@ -145,6 +157,7 @@ module.exports = {
   signIn,
   changePassword,
   getAllBikes,
+  getAllUsers,
   getUsersBikes,
   getBikeById,
   createBike,
