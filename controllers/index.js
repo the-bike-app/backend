@@ -14,21 +14,21 @@ const signUp = async (req, res) => {
   try {
     const { username, email, password } = req.body
     const password_digest = await bcrypt.hash(password, SALT_ROUNDS)
-    const user = await new User({
+    const user = new User({
       username,
       email,
       password_digest
     })
 
     await user.save()
-
     const payload = {
       id: user._id,
       username: user.username,
       email: user.email
     }
-
+    console.log(payload)
     const token = jwt.sign(payload, TOKEN_KEY)
+    console.log(token)
     return res.status(201).json({ user, token })
   } catch (error) {
     console.log(
@@ -152,6 +152,18 @@ const deleteBike = async (req, res) => {
   }
 }
 
+const verifyUser = (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    console.log(token);
+    const user = jwt.verify(token, TOKEN_KEY);
+    res.locals = user;
+    res.json({ user: res.locals });
+  } catch (e) {
+    res.status(401).send('Not Authorized');
+  }
+}
+
 module.exports = {
   signUp,
   signIn,
@@ -162,5 +174,6 @@ module.exports = {
   getBikeById,
   createBike,
   updateBike,
-  deleteBike
+  deleteBike,
+  verifyUser
 }
