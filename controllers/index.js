@@ -86,10 +86,7 @@ const getUsersBikes = async (req, res) => {
     const { user_id } = req.params
     const user = await User.findById(user_id)
     const userBikeIds = user.users_bikes
-    const usersBikes = userBikeIds.map((id) => {
-      Bike.findById(id)
-    })
-    return res.status(200).json({ usersBikes, userBikeIds, })
+    return res.status(200).json({ userBikeIds })
   } catch (error) {
     return res.status(500).send(error.message)
   }
@@ -111,11 +108,25 @@ const getBikeById = async (req, res) => {
 const createBike = async (req, res) => {
   try {
     const bike = await new Bike(req.body)
-    await bike.save()
-    const filter = { id: req.params.user._id };
-    const update = { users_bikes: 'add to array' };
-    await User.findOneAndUpdate(filter, update, { new: true });
-    return res.status(201).json(bike)
+    const newBike = await bike.save()
+    const thisUser = await User.findOne(newBike.user)
+    const newBikeArray = thisUser.users_bikes
+    newBikeArray.push(newBike._id)
+    const userId = newBike.user
+
+
+    await User.findByIdAndUpdate(userId, { users_bikes: newBikeArray }, { new: true }, (err, bike) => {
+      if (err) {
+        res.status(500).send(err);
+      }
+      if (!bike) {
+        res.status(500).send('Can not be updated, this bike does not exist!');
+      }
+      return res.status(200).json(bike)
+    })
+
+
+    return res.status(201).json(newBike)
   } catch (error) {
     console.log(error)
     return res.status(500).json({ error: error.message })
@@ -142,6 +153,23 @@ const updateBike = async (req, res) => {
 const deleteBike = async (req, res) => {
   try {
     const { bike_id } = req.params;
+    const bike = await Bike.findById(bike_id)
+
+    const user = await User.findById(bike.user)
+    const newBikeArray = user.users_bikes.filter(item => item !== bike_id)
+
+
+    await User.findByIdAndUpdate(bike.user, { users_bikes: newBikeArray }, { new: true }, (err, bike) => {
+      if (err) {
+        res.status(500).send(err);
+      }
+      if (!bike) {
+        res.status(500).send('Can not be updated, this bike does not exist!');
+      }
+      return res.status(200).json(bike)
+    })
+
+
     const deleted = await Bike.findByIdAndDelete(bike_id)
     if (deleted) {
       return res.status(200).send("Bike was deleted");
