@@ -42,6 +42,7 @@ const seedBikes = async () => {
         brand: brand[Math.floor(Math.random() * brand.length)],
         type: type[randNum],
         location: location[Math.floor(Math.random() * location.length)],
+        description: faker.lorem.paragraph(),
         price: Math.floor((Math.random() * 1000) + 100),
         image: imgUrl[randNum],
         user: userIds[index]
