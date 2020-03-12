@@ -17,4 +17,6 @@ router.post('/create-bike', restrict, controllers.createBike)
 router.put('/update-bike/:bike_id', restrict, controllers.updateBike)
 router.delete('/delete-bike/:bike_id', restrict, controllers.deleteBike)
 
+router.get('/verify',controllers.verifyUser)
+
 module.exports = router
