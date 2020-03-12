@@ -6,6 +6,7 @@ const Bike = new Schema(
     brand: { type: String, required: true },
     type: { type: String, required: true },
     location: { type: String, required: true },
+    description: { type: String, required: true },
     price: { type: String, required: true },
     image: { type: String, required: true },
     user: { type: Schema.Types.ObjectId, ref: 'users' }
