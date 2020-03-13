@@ -8,7 +8,7 @@ const Bike = new Schema(
     location: { type: String, required: true },
     description: { type: String, required: true },
     price: { type: String, required: true },
-    image: { type: String, required: true },
+    image: { data: Buffer, contentType: String, required: true },
     user: { type: Schema.Types.ObjectId, ref: 'users' }
   },
   { timestamps: true }
