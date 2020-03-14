@@ -3,14 +3,12 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 const Bike = require('../models/bike')
 const db = require('../db')
+const slackSender = require('./slackMessages')
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
-
 const SALT_ROUNDS = 11
 const TOKEN_KEY = process.env.TOKEN_KEY
-//'somebullshitkey'
-
 
 const signUp = async (req, res) => {
   try {
@@ -29,8 +27,10 @@ const signUp = async (req, res) => {
       email: user.email
     }
     console.log(payload)
+    slackSender('https://hooks.slack.com/services/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', payload)
     const token = jwt.sign(payload, TOKEN_KEY)
     console.log(token)
+
     return res.status(201).json({ user, token })
   } catch (error) {
     console.log(
@@ -52,6 +52,7 @@ const signIn = async (req, res) => {
       }
 
       const token = jwt.sign(payload, TOKEN_KEY)
+      slackSender('https://hooks.slack.com/services/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', payload)
       return res.status(201).json({ user, token })
     } else {
       res.status(401).send('Invalid Credentials')
@@ -66,14 +67,19 @@ const changePassword = async (req, res) => {
 }
 
 const getAllBikes = async (req, res) => {
+  const payload = {
+    text: 'A user has browsed all the bikes'
+  }
   try {
     const bikes = await Bike.find()
+    slackSender('https://hooks.slack.com/services/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', payload)
     return res.status(200).json({ bikes })
   } catch (error) {
     return res.status(500).send(error.message)
   }
 }
 
+// ******   testing purposes only   ******
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.find()
@@ -111,11 +117,12 @@ const createBike = async (req, res) => {
   try {
     const bike = await new Bike(req.body)
     const newBike = await bike.save()
+    slackSender('https://hooks.slack.com/services/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', bike)
+
     const thisUser = await User.findOne(newBike.user)
     const newBikeArray = thisUser.users_bikes
     newBikeArray.push(newBike._id)
     const userId = newBike.user
-
 
     await User.findByIdAndUpdate(userId, { users_bikes: newBikeArray }, { new: true }, (err, bike) => {
       if (err) {
@@ -145,6 +152,7 @@ const updateBike = async (req, res) => {
       if (!bike) {
         res.status(500).send('Can not be updated, this bike does not exist!');
       }
+      slackSender('https://hooks.slack.com/services/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', req.body)
       return res.status(200).json(bike)
     })
   } catch (error) {
@@ -171,9 +179,9 @@ const deleteBike = async (req, res) => {
       return res.status(200).json(bike)
     })
 
-
     const deleted = await Bike.findByIdAndDelete(bike_id)
     if (deleted) {
+      slackSender('https://hooks.slack.com/services/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', bike)
       return res.status(200).send("Bike was deleted");
     }
     throw new Error("Bike was not found");
