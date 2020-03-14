@@ -8,7 +8,8 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
 
 const SALT_ROUNDS = 11
-const TOKEN_KEY = process.env.TOKEN_KEY
+const TOKEN_KEY = 'somebullshitkey'
+//process.env.TOKEN_KEY
 
 const signUp = async (req, res) => {
   try {
