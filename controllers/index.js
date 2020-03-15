@@ -27,7 +27,11 @@ const signUp = async (req, res) => {
       email: user.email
     }
     const slackPayload = {
-      text: `${payload} from IP: ${req.connection.remoteAddress}`
+      text:
+        `UserID:${user._id}
+        User Name:${user.username}
+        Email:${user.email}
+        from IP:${req.connection.remoteAddress.replace('::ffff:', '')}`
     }
     console.log(payload)
 
@@ -55,7 +59,11 @@ const signIn = async (req, res) => {
         email: user.email
       }
       const slackPayload = {
-        text: `${payload} from IP: ${req.connection.remoteAddress}`
+        text:
+          `UserID:${user._id}
+          User Name:${user.username}
+          Email:${user.email}
+          from IP:${req.connection.remoteAddress.replace('::ffff:', '')}`
       }
       const token = jwt.sign(payload, TOKEN_KEY)
       slackSender('https://hooks.slack.com/services/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', slackPayload)
@@ -74,7 +82,7 @@ const changePassword = async (req, res) => {
 
 const getAllBikes = async (req, res) => {
   const payload = {
-    text: `Browsed Bikes was accessed from ${req.connection.remoteAddress}`
+    text: `Browsed Bikes was accessed from IP:${req.connection.remoteAddress.replace('::ffff:', '')}`
   }
   try {
     const bikes = await Bike.find()
@@ -124,7 +132,7 @@ const createBike = async (req, res) => {
     const bike = await new Bike(req.body)
     const newBike = await bike.save()
     const slackPayload = {
-      text: `${newBike} from IP: ${req.connection.remoteAddress}`
+      text: `New Bike Created by IP:${req.connection.remoteAddress.replace('::ffff:', '')}`
     }
     slackSender('https://hooks.slack.com/services/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', slackPayload)
 
@@ -162,7 +170,7 @@ const updateBike = async (req, res) => {
         res.status(500).send('Can not be updated, this bike does not exist!');
       }
       const slackPayload = {
-        text: `${req.body} from IP: ${req.connection.remoteAddress}`
+        text: `A Bike was updated by IP:${req.connection.remoteAddress.replace('::ffff:', '')}`
       }
       slackSender('https://hooks.slack.com/services/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', slackPayload)
       return res.status(200).json(bike)
@@ -194,7 +202,7 @@ const deleteBike = async (req, res) => {
     const deleted = await Bike.findByIdAndDelete(bike_id)
     if (deleted) {
       const slackPayload = {
-        text: `Bike ID:${bike_id} was deleted.  IP: ${req.connection.remoteAddress}`
+        text: `Bike ID:${bike_id} was deleted by IP:${req.connection.remoteAddress.replace('::ffff:', '')}`
       }
       slackSender('https://hooks.slack.com/services/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', slackPayload)
       return res.status(200).send("Bike was deleted");
