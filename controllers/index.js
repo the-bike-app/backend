@@ -26,8 +26,12 @@ const signUp = async (req, res) => {
       username: user.username,
       email: user.email
     }
+    const slackPayload = {
+      text: `${payload} from IP: ${req.connection.remoteAddress}`
+    }
     console.log(payload)
-    slackSender('https://hooks.slack.com/services/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', payload)
+
+    slackSender('https://hooks.slack.com/services/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', slackPayload)
     const token = jwt.sign(payload, TOKEN_KEY)
     console.log(token)
 
@@ -50,9 +54,11 @@ const signIn = async (req, res) => {
         username: user.username,
         email: user.email
       }
-
+      const slackPayload = {
+        text: `${payload} from IP: ${req.connection.remoteAddress}`
+      }
       const token = jwt.sign(payload, TOKEN_KEY)
-      slackSender('https://hooks.slack.com/services/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', payload)
+      slackSender('https://hooks.slack.com/services/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', slackPayload)
       return res.status(201).json({ user, token })
     } else {
       res.status(401).send('Invalid Credentials')
@@ -68,7 +74,7 @@ const changePassword = async (req, res) => {
 
 const getAllBikes = async (req, res) => {
   const payload = {
-    text: 'A user has browsed all the bikes'
+    text: `Browsed Bikes was accessed from ${req.connection.remoteAddress}`
   }
   try {
     const bikes = await Bike.find()
@@ -117,7 +123,10 @@ const createBike = async (req, res) => {
   try {
     const bike = await new Bike(req.body)
     const newBike = await bike.save()
-    slackSender('https://hooks.slack.com/services/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', bike)
+    const slackPayload = {
+      text: `${newBike} from IP: ${req.connection.remoteAddress}`
+    }
+    slackSender('https://hooks.slack.com/services/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', slackPayload)
 
     const thisUser = await User.findOne(newBike.user)
     const newBikeArray = thisUser.users_bikes
@@ -152,7 +161,10 @@ const updateBike = async (req, res) => {
       if (!bike) {
         res.status(500).send('Can not be updated, this bike does not exist!');
       }
-      slackSender('https://hooks.slack.com/services/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', req.body)
+      const slackPayload = {
+        text: `${req.body} from IP: ${req.connection.remoteAddress}`
+      }
+      slackSender('https://hooks.slack.com/services/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', slackPayload)
       return res.status(200).json(bike)
     })
   } catch (error) {
@@ -181,7 +193,10 @@ const deleteBike = async (req, res) => {
 
     const deleted = await Bike.findByIdAndDelete(bike_id)
     if (deleted) {
-      slackSender('https://hooks.slack.com/services/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', bike)
+      const slackPayload = {
+        text: `Bike ID:${bike_id} was deleted.  IP: ${req.connection.remoteAddress}`
+      }
+      slackSender('https://hooks.slack.com/services/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', slackPayload)
       return res.status(200).send("Bike was deleted");
     }
     throw new Error("Bike was not found");
