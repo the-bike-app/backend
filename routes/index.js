@@ -11,6 +11,7 @@ router.post('/change-password', controllers.changePassword)
 
 router.get('/bikes', controllers.getAllBikes)
 router.get('/users', controllers.getAllUsers)
+router.get('/users/:user_id', controllers.getUserById)
 router.get('/my-bikes/:user_id', controllers.getUsersBikes)
 router.get('/bikes/:bike_id', controllers.getBikeById)
 router.post('/create-bike', restrict, controllers.createBike)
