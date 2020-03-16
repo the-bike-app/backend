@@ -1,6 +1,7 @@
+require('../.ENV')
+
 module.exports = (req, res, next) => {
   const jwt = require('jsonwebtoken')
-
   const TOKEN_KEY = process.env.TOKEN_KEY
 
   try {
