@@ -1,7 +1,7 @@
 module.exports = (req, res, next) => {
   const jwt = require('jsonwebtoken')
 
-  const TOKEN_KEY = process.env.TOKEN_KEY
+  const TOKEN_KEY = 'areallylonggoodkey'
 
   try {
     const token = req.headers.authorization.split(' ')[1]
