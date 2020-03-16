@@ -1,5 +1,6 @@
 module.exports = (req, res, next) => {
   const jwt = require('jsonwebtoken')
+  require('../.ENV')
 
   const TOKEN_KEY = process.env.TOKEN_KEY
 
@@ -9,7 +10,7 @@ module.exports = (req, res, next) => {
     res.locals.user = data
     next()
   } catch (error) {
-    // console.log(error)
+    console.log(error)
     res.status(403).send('Unauthorized')
   }
 }
