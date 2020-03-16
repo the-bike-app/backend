@@ -77,7 +77,23 @@ const signIn = async (req, res) => {
 }
 
 const changePassword = async (req, res) => {
-
+  const { oldPassword, newPassword, id } = req.body;
+  const user = await User.findById(id)
+  console.log(user, req.body)
+  if (await bcrypt.compare(oldPassword, user.password_digest)) {
+    const password_digest = await bcrypt.hash(newPassword, SALT_ROUNDS)
+    await User.findByIdAndUpdate(id, { password_digest: password_digest }, { new: true }, (err, user) => {
+      if (err) {
+        res.status(500).send('Password error:', err);
+      }
+      const slackPayload = {
+        text: `User Id: ${id} updated their password from IP:${req.connection.remoteAddress.replace('::ffff:', '')}`
+      }
+      slackSender('https://hooks.slack.com/services/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', slackPayload)
+      return res.status(200).json(user)
+    })
+  } else
+    return res.status(469).send('Old Password Is Incorrect!')
 }
 
 const getAllBikes = async (req, res) => {
