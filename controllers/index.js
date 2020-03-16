@@ -10,7 +10,7 @@ const { signUpMessage, changePwMessage } = require('./emailTemplates')
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
 const SALT_ROUNDS = 11
-const TOKEN_KEY = 'areallylonggoodkey'
+const TOKEN_KEY = process.env.TOKEN_KEY
 
 const signUp = async (req, res) => {
   try {
