@@ -1,5 +1,4 @@
 const nodemailer = require('nodemailer')
-require('../.ENV')
 
 const sendEmail = (username, toAddress, message, subject) => {
   const transporter = nodemailer.createTransport({
