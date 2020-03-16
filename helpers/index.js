@@ -1,6 +1,5 @@
 module.exports = (req, res, next) => {
   const jwt = require('jsonwebtoken')
-  require('../.ENV')
 
   const TOKEN_KEY = process.env.TOKEN_KEY
 
