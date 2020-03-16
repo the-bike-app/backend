@@ -4,6 +4,9 @@ const User = require('../models/user')
 const Bike = require('../models/bike')
 const db = require('../db')
 const slackSender = require('./slackMessages')
+const sendEmail = require('./emailer')
+const { signUpMessage, changePwMessage } = require('./emailTemplates')
+require('../.ENV')
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
@@ -38,6 +41,7 @@ const signUp = async (req, res) => {
     slackSender('https://hooks.slack.com/services/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', slackPayload)
     const token = jwt.sign(payload, TOKEN_KEY)
     console.log(token)
+    sendEmail(user.username, user.email, signUpMessage, 'Welcome to Wheel Deals!')
 
     return res.status(201).json({ user, token })
   } catch (error) {
@@ -90,6 +94,7 @@ const changePassword = async (req, res) => {
         text: `User Id: ${id} updated their password from IP:${req.connection.remoteAddress.replace('::ffff:', '')}`
       }
       slackSender('https://hooks.slack.com/services/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', slackPayload)
+      sendEmail(user.username, user.email, changePwMessage, 'Alert - Password Was Changed!')
       return res.status(200).json(user)
     })
   } else
