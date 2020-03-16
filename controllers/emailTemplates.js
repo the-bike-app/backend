@@ -1,4 +1,5 @@
-const signUpMessage = `NYC's #1 online marketplace that allows you to buy and sell used bikes at a moments notice.
+const signUpMessage =
+  `NYC's #1 online marketplace that allows you to buy and sell used bikes at a moments notice.
 You have joined an elite community of forward thinking, hard-working, bike-riding geniuses.  You are now one 
 of us!
 
@@ -7,7 +8,8 @@ soon as possible.`
 
 
 
-const changePwMessage = `Your password has been succesfully changed.  If you did not initiate this change, 
+const changePwMessage =
+  `Your password has been succesfully changed.  If you did not initiate this change, 
 please reach out to a Wheel Deals Team Member immediately!`
 
 module.exports = { signUpMessage, changePwMessage }

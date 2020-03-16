@@ -37,7 +37,7 @@ const signUp = async (req, res) => {
     }
     console.log(payload)
 
-    slackSender('https://hooks.slack.com/services/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', slackPayload)
+    slackSender(process.env.SLACK_URL + process.env.SLACK_SIGN_UP, slackPayload)
     const token = jwt.sign(payload, TOKEN_KEY)
     console.log(token)
     sendEmail(user.username, user.email, signUpMessage, 'Welcome to Wheel Deals!')
@@ -69,7 +69,7 @@ const signIn = async (req, res) => {
           from IP:${req.connection.remoteAddress.replace('::ffff:', '')}`
       }
       const token = jwt.sign(payload, TOKEN_KEY)
-      slackSender('https://hooks.slack.com/services/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', slackPayload)
+      slackSender(process.env.SLACK_URL + process.env.SLACK_SIGN_IN, slackPayload)
       return res.status(201).json({ user, token })
     } else {
       res.status(401).send('Invalid Credentials')
@@ -92,7 +92,7 @@ const changePassword = async (req, res) => {
       const slackPayload = {
         text: `User Id: ${id} updated their password from IP:${req.connection.remoteAddress.replace('::ffff:', '')}`
       }
-      slackSender('https://hooks.slack.com/services/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', slackPayload)
+      slackSender(process.env.SLACK_URL + process.env.SLACK_CHANGE_PW, slackPayload)
       sendEmail(user.username, user.email, changePwMessage, 'Alert - Password Was Changed!')
       return res.status(200).json(user)
     })
@@ -106,7 +106,7 @@ const getAllBikes = async (req, res) => {
   }
   try {
     const bikes = await Bike.find()
-    slackSender('https://hooks.slack.com/services/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', payload)
+    slackSender(process.env.SLACK_URL + process.env.SLACK_ALL_BIKES, payload)
     return res.status(200).json({ bikes })
   } catch (error) {
     return res.status(500).send(error.message)
@@ -167,7 +167,7 @@ const createBike = async (req, res) => {
     const slackPayload = {
       text: `New Bike Created by IP:${req.connection.remoteAddress.replace('::ffff:', '')}`
     }
-    slackSender('https://hooks.slack.com/services/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', slackPayload)
+    slackSender(process.env.SLACK_URL + process.env.SLACK_CREATE_BIKE, slackPayload)
 
     const thisUser = await User.findOne(newBike.user)
     const newBikeArray = thisUser.users_bikes
@@ -205,7 +205,7 @@ const updateBike = async (req, res) => {
       const slackPayload = {
         text: `A Bike was updated by IP:${req.connection.remoteAddress.replace('::ffff:', '')}`
       }
-      slackSender('https://hooks.slack.com/services/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', slackPayload)
+      slackSender(process.env.SLACK_URL + process.env.SLACK_EDIT_BIKE, slackPayload)
       return res.status(200).json(bike)
     })
   } catch (error) {
@@ -237,7 +237,7 @@ const deleteBike = async (req, res) => {
       const slackPayload = {
         text: `Bike ID:${bike_id} was deleted by IP:${req.connection.remoteAddress.replace('::ffff:', '')}`
       }
-      slackSender('https://hooks.slack.com/services/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', slackPayload)
+      slackSender(process.env.SLACK_URL + process.env.SLACK_DELETED, slackPayload)
       return res.status(200).send("Bike was deleted");
     }
     throw new Error("Bike was not found");
