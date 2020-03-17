@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer')
+//require('../.ENV')   ** uncomment when running locally ** \\
 
 const sendEmail = (username, toAddress, message, subject) => {
   const transporter = nodemailer.createTransport({
