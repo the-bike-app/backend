@@ -6,6 +6,7 @@ const db = require('../db')
 const slackSender = require('./slackMessages')
 const sendEmail = require('./emailer')
 const { signUpMessage, changePwMessage } = require('./emailTemplates')
+//require('../.ENV')
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 

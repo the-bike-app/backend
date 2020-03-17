@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer')
-//require('../.ENV')   ** uncomment when running locally ** \\
+//require('../.ENV')  // <---** uncomment when running locally ** \\
 
 const sendEmail = (username, toAddress, message, subject) => {
   const transporter = nodemailer.createTransport({
@@ -10,7 +10,6 @@ const sendEmail = (username, toAddress, message, subject) => {
     }
   })
 
-  console.log(process.env.EMAIL_PW, process.env.EMAIL_ADDRESS, process.env.EMAIL_SERVICE)
   const mailOptions = {
     from: 'The Wheel Deals App <cool.bike.app@gmail.com>',
     to: toAddress,
