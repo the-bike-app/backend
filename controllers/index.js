@@ -160,6 +160,16 @@ const getBikeById = async (req, res) => {
   }
 }
 
+const sendOffer = async (req, res) => {
+  try {
+    const { seller, sellerEmail, message } = req.body
+    sendEmail(seller, sellerEmail, message, 'Someone Is Interested In Your Bike!')
+    return res.status(200).json('Offer Was Sent')
+  } catch (error) {
+    return res.status(500).send(error.message)
+  }
+}
+
 const createBike = async (req, res) => {
   try {
     const bike = await new Bike(req.body)
@@ -267,6 +277,7 @@ module.exports = {
   getUserById,
   getUsersBikes,
   getBikeById,
+  sendOffer,
   createBike,
   updateBike,
   deleteBike,
