@@ -1,6 +1,7 @@
 const db = require('../db')
 const User = require('../models/user')
 const Bike = require('../models/bike')
+const imgUrl = require('./img')
 const faker = require('faker')
 
 let seedLength = 15
@@ -8,12 +9,9 @@ let seedLength = 15
 const brand = ['Bianchi', 'Diamondback', 'Firmstrong', 'Giant', 'Huffy', 'Kestral', 'Mongoose', 'Raleigh', 'Retrospec', 'Santa Cruz', 'Schwinn', 'Specialized', 'Strider', 'Trek Bikes', 'Vilano']
 const type = ['BMX', 'Cruiser', 'Folding', 'Hybrid', 'Mountain', 'Road', 'Tandem', 'Touring', 'Track', 'Urban']
 const location = ['Bronx', 'Brooklyn', 'Manhattan', 'Queens', 'Staten Island']
-const imgUrl = ['/img/BMX-bike.png', '/img/cruiser-bike.jpeg', '/img/folding-bike.jpg', '/img/hybrid-bike.jpg', '/img/mountain-bike.jpg', '/img/road-bike.jpg', '/img/road-bike.jpg', '/img/tandem-bike.jpg', '/img/track-bike.jpg', '/img/urban-bike.jpg']
-
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 
-//const bikesArray = ['fake_' + faker.random.uuid(), 'fake_' + faker.random.uuid(), 'fake_' + faker.random.uuid()]
 const bikesArray = []
 const userIds = []
 

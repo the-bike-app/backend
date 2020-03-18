@@ -7,6 +7,15 @@ const routes = require('./routes');
 const app = express();
 
 app.use(cors())
+
+app.all('*', (req, res, next) => {
+  const origin = req.get('origin');
+  res.header('Access-Control-Allow-Origin', origin);
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
+
 app.use(bodyParser.json())
 app.use(logger('dev'))
 
